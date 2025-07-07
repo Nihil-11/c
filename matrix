@@ -1,0 +1,102 @@
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <time.h> 
+
+void create(int matrix[10][10], int* rows, int* cols, bool* created) {
+    printf("Enter the sizes of matrix:\nRows: ");
+    scanf("%d", rows);
+    printf("Cols: ");
+    scanf("%d", cols);
+
+    for (int i = 0; i < *rows; i++) {
+        for (int j = 0; j < *cols; j++) {
+            printf("Enter element [%d][%d]: ", i, j);
+            scanf("%d", &matrix[i][j]);
+        }
+    }
+
+    *created = true; // флаг (матрица создана)
+}
+
+// не передаю адреса rows и cols, т.к нужны только их значения 
+void display(int matrix[10][10], int rows, int cols) {
+    printf("Matrix: \n");
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void random_matrix(int matrix[10][10], int* rows, int* cols, bool* created) {
+    if (!*created) { // если матрица не создана
+        printf("Enter the sizes of matrix:\nRows: ");
+        scanf("%d", rows);
+        printf("Cols: ");
+        scanf("%d", cols);
+    }
+
+    for (int i = 0; i < *rows; i ++) {
+        for (int j = 0; j < *cols; j++) {
+            matrix[i][j] = rand() % 10;
+        }
+    }
+
+    *created = true; // флаг (матрица создана)
+}
+
+void multiply_matrix(int matrix[10][10], int* rows, int* cols) {
+    int multiplier = 0;
+    printf("Multiply by: ");
+    scanf("%d", &multiplier);
+
+    for (int i = 0; i < *rows; i++) {
+        for (int j = 0; j < *cols; j++) {
+            matrix[i][j] *= multiplier;
+        }
+    }
+}
+
+void show_error() { // если матрица еще не создана
+    printf("Error: Please create the matrix first.\n");
+}
+
+int main() {
+    int matrix[10][10];
+    int rows, cols;
+    bool created = false; // флаг (матрица создана / не создана)
+    
+    srand(time(NULL));
+
+    while (true) {
+        int choice;
+        printf("------------------\n");
+        printf("1. Create Matrix\n");
+        printf("2. Display Matrix\n");
+        printf("3. Random matrix\n");
+        printf("4. Multiply matrix\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        printf("------------------\n");
+
+        if (choice == 1) {
+            create(matrix, &rows, &cols, &created);
+        } else if (choice == 2) {
+            if (created) {display(matrix, rows, cols);} else {show_error();}
+        } else if (choice == 3) {random_matrix(matrix, &rows, &cols, &created);}
+        else if (choice == 4) {
+          if (created) {multiply_matrix(matrix, &rows, &cols);} else {show_error();}
+        } 
+        else if (choice == 5) {
+            break;
+        } else {
+            printf("Invalid choice. Please choose again.\n");
+        }
+    }
+
+    return 0;
+}
