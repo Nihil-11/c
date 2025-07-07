@@ -1,0 +1,55 @@
+
+#include <stdio.h>
+
+void get_elements(int arr[], int number) {
+    printf("Enter %d elements: ", number);
+    for (int i = 0; i < number; i++) {
+        scanf("%d", &arr[i]);
+    }
+}
+
+float average(int arr[], int number) {
+    int sum = 0;
+
+    for (int i = 0; i < number; i++) {
+        sum += arr[i];
+    }
+
+    return (float)sum / number;
+}
+
+void is_greater(int arr[], float avr, int number) {
+    int indices[100];
+    int count = 0;
+
+    for (int i = 0; i < number; i++) {
+        if (arr[i] > (int)avr) {
+            indices[i] = 1;
+            count++;
+        }
+    }
+
+    printf("Number of elements that greater than average: %d\n", count);
+    printf("Elements that greater than average: ");
+    for (int i = 0; i < number; i++) {
+        if (indices[i] == 1) {
+            printf("%d ", arr[i]);
+        }
+    }
+}
+
+int main() {
+    int arr[100];
+    int number;
+
+    printf("Enter the number of elements: ");
+    scanf("%d", &number);
+
+    get_elements(arr, number);
+    float avr = average(arr, number);
+
+    printf("Average value: %f\n", avr);
+    is_greater(arr, avr, number);
+
+    return 0;
+}
