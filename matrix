@@ -20,7 +20,6 @@ void create(int matrix[10][10], int* rows, int* cols, bool* created) {
     *created = true; // флаг (матрица создана)
 }
 
-// не передаю адреса rows и cols, т.к нужны только их значения 
 void display(int matrix[10][10], int rows, int cols) {
     printf("Matrix: \n");
     for (int i = 0; i < rows; i++) {
@@ -48,14 +47,26 @@ void random_matrix(int matrix[10][10], int* rows, int* cols, bool* created) {
     *created = true; // флаг (матрица создана)
 }
 
-void multiply_matrix(int matrix[10][10], int* rows, int* cols) {
+void multiply_matrix(int matrix[10][10], int rows, int cols) {
     int multiplier = 0;
     printf("Multiply by: ");
     scanf("%d", &multiplier);
 
-    for (int i = 0; i < *rows; i++) {
-        for (int j = 0; j < *cols; j++) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
             matrix[i][j] *= multiplier;
+        }
+    }
+}
+
+void add_matrix(int matrix[10][10], int rows, int cols) {
+    printf("Enter the matrix term:\n");
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            int term;
+            printf("Enter element [%d][%d]: ", i, j);
+            scanf("%d", &term);
+            matrix[i][j] += term;
         }
     }
 }
@@ -78,7 +89,8 @@ int main() {
         printf("2. Display Matrix\n");
         printf("3. Random matrix\n");
         printf("4. Multiply matrix\n");
-        printf("5. Exit\n");
+        printf("5. Matrix addition\n");
+        printf("6. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
         printf("------------------\n");
@@ -89,9 +101,11 @@ int main() {
             if (created) {display(matrix, rows, cols);} else {show_error();}
         } else if (choice == 3) {random_matrix(matrix, &rows, &cols, &created);}
         else if (choice == 4) {
-          if (created) {multiply_matrix(matrix, &rows, &cols);} else {show_error();}
-        } 
-        else if (choice == 5) {
+          if (created) {multiply_matrix(matrix, rows, cols);} else {show_error();}
+        } else if (choice == 5) {
+            if (created) {add_matrix(matrix, rows, cols);} else {show_error();}
+        }
+        else if (choice == 6) {
             break;
         } else {
             printf("Invalid choice. Please choose again.\n");
