@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void add_str(char*** arr, int* size) {
+    char** temp = realloc(*arr, sizeof(char*) * (*size + 1)); // перевыделяю память и храню во временном указателе
+    if (temp != NULL) { // потому что если ошибка, то оригинал (arr) будет нетронут
+        *arr = temp;
+        (*size)++;
+
+        char word[10]; // временный массив для новой строки (в стеке)
+        printf("Enter a string: ");
+        scanf("%s", &word);
+        (*arr)[*size - 1] = malloc(strlen(word) + 1); // выделяю память под новую строку (+1 для символа "\0")
+        strcpy((*arr)[*size - 1], word); // и сразу копирую в элемент arr
+    } else {
+        printf("Memory reallocation failed\n");
+    }
+}
+
+void delete_str(char*** arr, int* size) { 
+    if (*size > 0) {
+        free((*arr)[(*size) - 1]); // сначала освобождаю память
+        char** temp = realloc(*arr, sizeof(char*) * (*size - 1)); // чтобы не потерять к ней доступ после перевыделения
+        if (temp != NULL || (*size - 1) == 0) {
+            *arr = temp; // temp создавался с той же целью, как в add_str
+            (*size)--;
+        } else {
+            printf("Memory reallocation failed\n");
+        }
+    } 
+}
+
+void display_array(char** arr, int size) { // вывод строк
+    if (size == 0) { 
+        printf("\nArray is empty\n"); 
+        return; 
+    }
+
+    printf("\nArray: [");
+    for (int i = 0; i < size - 1; i++) {
+        printf("%s, ", arr[i]);
+    }
+    printf("%s]\n", arr[size - 1]);
+}
+
+void free_mem(char*** arr, int size) { 
+    if (*arr != NULL) {
+        for (int i = 0; i < size; i++) {
+            free((*arr)[i]);
+        }
+        free(*arr);
+    }
+}
+
+int main() {
+    int size = 0, run = 1; // размер массива и флаг
+    char** arr = NULL; // поначалу "пустой" массив, поэтому NULL
+
+    while (run) {
+        int choice;
+        printf("\n1. Add string\n");
+        printf("2. Delete string\n");
+        printf("3. Display all strings\n");
+        printf("0. Exit");
+        printf("\nEnter: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: add_str(&arr, &size); display_array(arr, size); break;
+            case 2: delete_str(&arr, &size); display_array(arr, size); break;
+            case 3: display_array(arr, size); break;
+            case 0: printf("\nExit complete\n"); run = 0; break;
+            default: printf("Invalid choice");
+        }
+    }
+
+    free_mem(&arr, size);
+
+    return 0;
+}
