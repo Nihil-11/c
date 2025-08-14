@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void free_memory(int*** arr, int* rows) {
+    for (int i = 0; i < *rows; i++) {
+        free((*arr)[i]);
+    }
+    free(*arr);
+}
+
+int create(int*** matrix, int* rows, int* cols) {
+    printf("Enter number of rows: ");
+    scanf("%d", rows);
+    if (*rows < 1 || *rows > 10) { 
+        printf("\nInvalid matrix size.\n");
+        return 0; 
+    }
+    printf("Enter number of cols: ");
+    scanf("%d", cols);    
+    if (*cols < 1 || *cols > 10) { 
+        printf("\nInvalid matrix size.\n");
+        return 0; 
+    }
+
+    *matrix = malloc(sizeof(int*) * (*rows));
+    if (!*matrix) {
+        printf("\nMemory allocation failed\n");
+        return 0;
+    } else {
+        for (int i = 0; i < *rows; i++) {
+            (*matrix)[i] = malloc(sizeof(int) * (*cols));
+            for (int j = 0; j < *cols; j++) {
+                (*matrix)[i][j] = (rand() % 101) - 50;
+            }
+        }
+        return 1;
+    }
+}
+
+void delete_row(int*** matrix, int* rows, int cols) {
+    int index = 0, min_sum = 10000;
+
+    for (int i = 0; i < *rows; i++) { // нахожу строку с минимальной суммой
+        int summ = 0;
+        for (int j = 0; j < cols; j++) {
+            summ += (*matrix)[i][j]; 
+        }
+        if (summ < min_sum) {
+            min_sum = summ;
+            index = i;
+        }
+    }
+
+    free((*matrix)[index]); // освобождаю память от строки с мин. суммой (перед удалением)
+    for (int i = index; i < (*rows) - 1; i++) { // смещает указатели
+        (*matrix)[i]= (*matrix)[i + 1];
+    }
+
+    int** temp = realloc(*matrix, sizeof(int*) * ((*rows) - 1)); // перевыделив память, "удаляю" массив с мин. суммой
+    if (temp != NULL) {
+        *matrix = temp; // теперь matrix указывает на адрес измененного массива
+        (*rows)--;
+    } else {
+        printf("\nMemory reallocation failed\n");
+    }
+}
+
+void display(int** matrix, int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        printf("\n");
+        for (int j = 0; j < cols; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+    }
+    printf("\n");
+}
+
+int main() {
+    int** matrix = NULL;
+    int rows, cols;
+
+    if (create(&matrix, &rows, &cols)) {
+        printf("\nRandom matrix %dx%d:\n", rows, cols);
+        display(matrix, rows, cols);
+        printf("\nRow with the less sum deleted:\n");
+        delete_row(&matrix, &rows, cols);
+        display(matrix, rows, cols);
+        free_memory(&matrix, &rows);
+    }
+
+    return 0;
+}
