@@ -39,7 +39,6 @@ int create(int*** matrix, int* rows, int* cols) {
 
 void delete_row(int*** matrix, int* rows, int cols) {
     int index = 0, min_sum = 10000;
-
     for (int i = 0; i < *rows; i++) { // нахожу строку с минимальной суммой
         int summ = 0;
         for (int j = 0; j < cols; j++) {
