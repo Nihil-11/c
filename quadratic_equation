@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 
 int coef(int* k, char t[2]) {
@@ -56,23 +57,29 @@ void display(int a, int b, int c) {
 void solve(int a, int b, int c) {
     double D = (double)b*b - (4*a*c);
 
+    if (D < 0) {
+        printf("\nNo real solutions (x ∉ R)");
+    }
+
     if (D > 0) {
-        float x_1, x_2;
+        double x_1, x_2;
         x_1 = (-b + sqrt(D)) / (2*a);
         x_2 = (-b - sqrt(D)) / (2*a);
 
-        printf("\nSolution:");
+        printf("\nReal solutions:");
         printf("\n  x_1 = %.1f; x_2 = %.1f\n", x_1, x_2);
     }
 
-    else if (D == 0) {
-        float x = (-b) / (2*a);
-        printf("\nSolution:");
-        printf("\n  x = %.1f\n", x);
-    }
-    
-    else {
-        printf("\nNo real solutions (x ∉ R)\n");
+    if (D != 0) {
+        double p = (double)-b / (2*a);
+        double q = sqrt(fabs(D)) / (2*a);
+        printf("\nImaginary solutions:");
+        printf("\n  x_1 = %.1f + %.1fi; x_2 = %.1f - %.1fi\n", p, q, p, q);
+    } else {
+        double x = (double)(-b) / (2*a);
+        printf("\nReal solution:");
+        printf("\n  x = %.1f", x);
+        printf("\nNo complex solutions (both roots are real and equal)\n");
     }
 }
 
