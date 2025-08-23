@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <math.h>
+
+int coef(int* k, char t[2]) {
+    printf("Enter coefficient %s: ", t);
+    scanf("%d", k);
+
+    if (*k == 0) {
+        printf("Invalid coefficient\n");
+        return 0;
+    }
+
+    return 1;
+}
+
+void display(int a, int b, int c) {
+    printf("\nYour quadratic equation:\n  ");
+
+    if (a == 1) {
+        printf("x^2");
+    }
+    else if (a == -1) {
+        printf("-x^2");
+    }
+    else {
+        printf("%dx^2", a);
+    }
+
+    if (b > 0) {
+        printf(" + %dx", b);
+    }
+    else if (b < 0) {
+        printf(" - %dx", -b);
+    }
+    if (c > 0) {
+        printf(" + %d", c);
+    }
+    else if (c < 0) {
+        printf(" - %d", -c);
+    }
+
+    printf(" = 0\n");
+}
+
+void solve(int a, int b, int c) {
+    double D = (double)b*b - (4*a*c);
+
+    if (D > 0) {
+        float x_1, x_2;
+        x_1 = (-b + sqrt(D)) / (2*a);
+        x_2 = (-b - sqrt(D)) / (2*a);
+
+        printf("\nSolution:");
+        printf("\n  x_1 = %.1f; x_2 = %.1f\n", x_1, x_2);
+    }
+
+    else if (D == 0) {
+        float x = (-b) / (2*a);
+        printf("\nSolution:");
+        printf("\n  x = %.1f\n", x);
+    }
+    
+    else {
+        printf("\nNo real solution (x ∉ R)\n");
+    }
+}
+
+int main() {
+    int a, b, c;
+    printf("\nQuadratic equation of the form ax^2 + bx + c = 0\n");
+    printf("\n");
+
+    if (coef(&a, "a")) {
+        if (coef(&b, "b")) {
+            if (coef(&c, "c")) {
+                display(a, b, c);
+                solve(a, b, c);
+            }
+        }
+    }
+
+    return 0;
+}
