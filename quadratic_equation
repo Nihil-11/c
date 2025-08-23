@@ -3,14 +3,18 @@
 
 int coef(int* k, char t[2]) {
     printf("Enter coefficient %s: ", t);
-    scanf("%d", k);
 
-    if (*k == 0) {
-        printf("Invalid coefficient\n");
+    if (scanf("%d", k)) {
+        if (*k == 0) {
+            printf("Invalid coefficient\n");
+            return 0;
+        }
+
+        return 1;
+    } else {
+        printf("\nInvalid input\n");
         return 0;
     }
-
-    return 1;
 }
 
 void display(int a, int b, int c) {
@@ -26,12 +30,19 @@ void display(int a, int b, int c) {
         printf("%dx^2", a);
     }
 
-    if (b > 0) {
+    if (b == 1) {
+        printf(" + x");
+    }
+    else if (b == -1) {
+        printf(" - x");
+    }
+    else if (b > 0) {
         printf(" + %dx", b);
     }
     else if (b < 0) {
         printf(" - %dx", -b);
     }
+
     if (c > 0) {
         printf(" + %d", c);
     }
@@ -61,7 +72,7 @@ void solve(int a, int b, int c) {
     }
     
     else {
-        printf("\nNo real solution (x ∉ R)\n");
+        printf("\nNo real solutions (x ∉ R)\n");
     }
 }
 
