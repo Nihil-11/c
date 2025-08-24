@@ -1,0 +1,50 @@
+#include <stdio.h>
+
+int get_n(int* n) {
+    printf("Enter positive number: ");
+    if (!scanf("%d", n)) {
+        printf("\nInvalid input");
+        return 0;
+    }
+    if (*n < 0) {
+        printf("\nInvalid input");
+        return 0;
+    }
+    if (*n > 20) {
+        printf("\nToo big number");
+        return 0;
+    }
+
+    return 1;
+} 
+
+unsigned long long factorial(int n) {
+    if (n == 0) {
+        return 1;
+    } else {
+        return n * factorial(n - 1);
+    }
+}
+
+int fib(int n) {
+    if (n == 0) {
+        return 0;
+    }
+    if (n == 1) {
+        return 1;
+    }
+
+    return fib(n - 1) + fib(n - 2);
+}
+
+int main() {
+    int n;
+    
+    if (get_n(&n)) {
+        printf("%d! = %lld", n, factorial(n));
+        printf("\nfib(%d) = %d", n, fib(n + 1));
+        printf("\n");
+    } 
+
+    return 0;
+}
