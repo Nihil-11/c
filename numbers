@@ -1,55 +1,187 @@
-
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
 
-void get_elements(int arr[], int number) {
-    printf("Enter %d elements: ", number);
-    for (int i = 0; i < number; i++) {
-        scanf("%d", &arr[i]);
+int is_prime(int number) { // проверяет, является ли число простым
+    if (number <= 1) {
+        return 0;
     }
-}
-
-float average(int arr[], int number) {
-    int sum = 0;
-
-    for (int i = 0; i < number; i++) {
-        sum += arr[i];
+    if (number == 2) {
+        return 1;
     }
 
-    return (float)sum / number;
+    for (int i = 2; i <= sqrt(number); i++) {
+        if (number % i == 0) {
+            return 0;
+        }
+    }
+
+    return 1;
 }
 
-void is_greater(int arr[], float avr, int number) {
-    int indices[100];
+void primes(int* arr, int size) { // поиск простых чисел в массиве
     int count = 0;
+    int* primes = malloc(sizeof(int) * count); // массив для хранения простых чисел
 
-    for (int i = 0; i < number; i++) {
-        if (arr[i] > (int)avr) {
-            indices[i] = 1;
+    for (int i = 0; i < size; i++) {
+        if (is_prime(arr[i])) { // проверка на простое число через функцию
+            count++;
+            int* temp = realloc(primes, sizeof(int) * count);
+            if (!temp) {
+                return;
+            }
+            primes = temp;
+            primes[count - 1] = arr[i];
+        }
+    }
+    
+    if (count == 0) {
+        printf("\nNo prime numbers in array\n");
+    } else { // вывод результата
+        printf("\nNumber of prime numbers in array: %d", count);
+        printf("\nPrime numbers in array: ");
+        for (int i = 0; i < count; i++) {
+            printf("%d ", primes[i]);
+        }
+        printf("\n");
+
+        free(primes); // после вывода массив уже не нужен, освобождаю память
+    }
+}
+
+void avr(int* arr, int size) { // нахождение среднего арифметического и чисел, которые больше него
+    int total = 0;
+    for (int i = 0; i < size; i++) {
+        total += arr[i];
+    }
+
+    float average = (float)total/size; // среднее арифметическое
+    printf("\nAverage of array: %.2f", average);
+
+    int count = 0; 
+    for (int i = 0; i < size; i++) { // подсчет таких чисел
+        if (arr[i] > average) {
             count++;
         }
     }
 
-    printf("Number of elements that greater than average: %d\n", count);
-    printf("Elements that greater than average: ");
-    for (int i = 0; i < number; i++) {
-        if (indices[i] == 1) {
-            printf("%d ", arr[i]);
+    if (count > 0) { // вывод
+        printf("\nNumber of numbers that greater than average: %d", count);
+        printf("\nNumbers that greater than average: ");
+        for (int i = 0; i < size; i++) {
+            if (arr[i] > average) {
+                printf("%d ", arr[i]);
+            }
         }
+    } else {
+        printf("\nNo such numbers that greater than average");
+    }
+}
+
+void count_pos_neg(int* arr, int size) { // подсчет положительных и отрицательных чисел
+    int count_p = 0;
+    int count_n = 0;
+
+    for (int i = 0; i < size; i++) {
+        if (arr[i] > 0) {
+            count_p++;
+        }
+        if (arr[i] < 0) {
+            count_n++;
+        }
+    }
+
+    if (count_p > 0) { // вывод
+        printf("\nNumber of positive numbers: %d", count_p);
+        printf("\nPositive numbers in array: ");
+        for (int i = 0; i < size; i++) {
+            if (arr[i] > 0) {
+                printf("%d ", arr[i]);
+            }
+        }
+    } else {
+        printf("\nNo positive numbers in array");
+    }
+
+    if (count_n > 0) { // вывод
+        printf("\nNumber of negative numbers: %d", count_n);
+        printf("\nNegative numbers in array: ");
+        for (int i = 0; i < size; i++) {
+            if (arr[i] < 0) {
+                printf("%d ", arr[i]);
+            }
+        }
+    } else {
+        printf("\nNo negative numbers in array");
+    }
+}
+
+void find_minmax(int* arr, int size) { // нахождение минимального и максимального значения
+    int max = -51;
+    int min = 51;
+    int i_max = 0; // индексы мин.\макс. чисел
+    int i_min = 0;
+
+    for (int i = 0; i < size; i++) {
+        if (arr[i] > max) {
+            max = arr[i];
+            i_max = i;
+        } 
+        
+        if (arr[i] < min) {
+            min = arr[i];
+            i_min = i;
+        }
+    }
+    
+    printf("\nMax value in array: %d, index: %d", max, i_max);
+    printf("\nMin value in array: %d, index: %d", min, i_min);
+}
+
+void random_arr(int** arr, int size) { // заполнение массива рандомными числами от -50 до 50
+    *arr = malloc(sizeof(int) * size); // выделяю память под массив
+    if (*arr == NULL) {
+        printf("\nMemory allocation failed\n");
+        return;
+    } 
+
+    for (int i = 0; i < size; i++) {
+        (*arr)[i] = (rand() % 101) - 50; // рандомное число от -50 до 50
+    }
+
+    printf("\nArray: ["); // вывод массива
+    for (int i = 0; i < size - 1; i++) {
+        printf("%d, ", (*arr)[i]);
+    }
+    printf("%d]\n", (*arr)[size - 1]);
+}
+
+int get(int* size) { // запрашивает размер массива (кол-ва элементов)
+    printf("\nEnter size of array: ");
+    scanf("%d", size);
+
+    if (*size > 0 && *size < 1000000) {
+        return 1;
+    } else {
+        printf("\nInvalid input\n");
+        return 0;
     }
 }
 
 int main() {
-    int arr[100];
-    int number;
-
-    printf("Enter the number of elements: ");
-    scanf("%d", &number);
-
-    get_elements(arr, number);
-    float avr = average(arr, number);
-
-    printf("Average value: %f\n", avr);
-    is_greater(arr, avr, number);
+    int size;
+    int* arr = NULL;
+    if (get(&size)) {
+        srand(time(0));
+        random_arr(&arr, size);
+        find_minmax(arr, size);
+        count_pos_neg(arr, size);
+        avr(arr, size);
+        primes(arr, size);
+        
+        free(arr);
+    }
 
     return 0;
 }
