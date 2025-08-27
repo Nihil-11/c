@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int get(int* x) {
+    if (!scanf("%d", x)) {
+        return 0;
+    } else if (*x <= 0) {
+        return 0;
+    }
+
+    return 1;
+}
+
+int gcd(int a, int b) {
+    if (b == 0) {
+        return a;
+    }
+
+    return gcd(b, a % b);
+}
+
+int lcm(int a, int b) {
+    return (abs(a * b)) / gcd(a, b);
+}
+
+int main() {
+    int a, b;
+
+    printf("\nEnter fisrt number: ");
+    if (get(&a)) {
+        printf("Enter second number: ");
+        if (get(&b)) {
+            printf("\nGCD of %d and %d: %d", a, b, gcd(a, b));
+            printf("\nLCM of %d and %d: %d\n", a, b, lcm(a, b));
+        }
+    }
+
+    return 0;
+}
